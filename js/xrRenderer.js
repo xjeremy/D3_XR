@@ -1,6 +1,6 @@
 // js/xrRenderer.js
 // Uses Three.js to render the graph in a WebXR environment.
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js";
+import * as THREE from "three";
 import { VRButton } from "https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/webxr/VRButton.js";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/controls/OrbitControls.js";
 
@@ -13,28 +13,29 @@ export class XRGraphRenderer {
   }
 
   init() {
-    // Create scene and camera
+    // Create scene and camera.
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
 
     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
-    this.camera.position.set(0, 0, 800);
+    // Move the viewer further away on the z axis.
+    this.camera.position.set(0, 0, 1200);
 
-    // Create renderer and enable XR
+    // Create renderer and enable XR.
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.xr.enabled = true;
     document.body.appendChild(this.renderer.domElement);
     document.body.appendChild(VRButton.createButton(this.renderer));
 
-    // Add OrbitControls for desktop fallback
+    // Add OrbitControls for desktop fallback (works in XR mode as well).
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    // Group to hold all graph objects
+    // Group to hold all graph objects.
     this.graphGroup = new THREE.Group();
     this.scene.add(this.graphGroup);
 
-    // Build the graph (nodes and links)
+    // Build the graph (nodes and links).
     this.createGraph();
 
     window.addEventListener('resize', this.onWindowResize.bind(this), false);
