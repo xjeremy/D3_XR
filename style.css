@@ -1,0 +1,15 @@
+/* style.css */
+/* Dark theme styling */
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
