@@ -15,11 +15,11 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.152.2/examples/js/OrbitControls.js"></script>
-  <script src="https://unpkg.com/three@0.152.2/examples/js/VRButton.js"></script>
+  <!-- Load VRButton from the three.js official examples site -->
+  <script src="https://threejs.org/examples/js/VRButton.js"></script>
 
   <script>
     /************** Data Generation **************/
-    // Generates a hierarchical tree with up to `totalNodes` nodes.
     function generateTree(totalNodes) {
       let count = 0;
       function createNode() {
@@ -34,7 +34,6 @@
             if (child) node.children.push(child);
           }
         }
-        // Remove the children property if there are none.
         if (node.children.length === 0) {
           delete node.children;
         }
@@ -42,18 +41,13 @@
       }
       return createNode();
     }
-    // Create sample data with 100 nodes.
     var data = generateTree(100);
 
     /************** Compute Radial Layout with D3 **************/
-    // Create a D3 hierarchy from the data.
     var root = d3.hierarchy(data);
-    // Set the radial layout size: [360° (angle), radius].
     var radius = 300;
     var cluster = d3.cluster().size([360, radius]);
     cluster(root);
-
-    // Convert polar coordinates (angle in degrees, radius) to Cartesian (x, y).
     function polarToCartesian(angle, r) {
       var rad = angle * Math.PI / 180;
       return { x: r * Math.cos(rad), y: r * Math.sin(rad) };
@@ -63,94 +57,7 @@
     var scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.set(0, 0, 800);
 
-    var renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.xr.enabled = true;
-    document.body.appendChild(renderer.domElement);
-    // Add the VRButton to enter VR mode (if available).
-    document.body.appendChild(VRButton.createButton(renderer));
-
-    // Add OrbitControls as a fallback for desktop/mouse interaction.
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    // Group for all graph objects (nodes and links)
-    var graphGroup = new THREE.Group();
-    scene.add(graphGroup);
-
-    /************** Create Graph Objects **************/
-    // Materials and geometry for nodes and links.
-    var nodeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-    var nodeGeometry = new THREE.SphereGeometry(5, 16, 16);
-    var linkMaterial = new THREE.LineBasicMaterial({ color: 0x888888 });
-
-    // Array to store node meshes for interactivity.
-    var nodeMeshes = [];
-
-    // Create and add node spheres.
-    root.descendants().forEach(function(d) {
-      var pos = polarToCartesian(d.x, d.y);
-      var mesh = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
-      mesh.position.set(pos.x, pos.y, 0);
-      // Store a reference to the corresponding D3 data.
-      mesh.userData = d;
-      graphGroup.add(mesh);
-      nodeMeshes.push(mesh);
-    });
-
-    // Create and add links between nodes.
-    root.links().forEach(function(link) {
-      var sourcePos = polarToCartesian(link.source.x, link.source.y);
-      var targetPos = polarToCartesian(link.target.x, link.target.y);
-      var geometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(sourcePos.x, sourcePos.y, 0),
-        new THREE.Vector3(targetPos.x, targetPos.y, 0)
-      ]);
-      var line = new THREE.Line(geometry, linkMaterial);
-      graphGroup.add(line);
-    });
-
-    /************** Interactivity (Node Selection) **************/
-    var raycaster = new THREE.Raycaster();
-    var mouse = new THREE.Vector2();
-    // Handle mouse click for node selection.
-    function onClick(event) {
-      // Convert mouse coordinates to normalized device coordinates (-1 to +1).
-      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      var intersects = raycaster.intersectObjects(nodeMeshes);
-      if (intersects.length > 0) {
-        var selected = intersects[0].object;
-        // Reset all nodes to default color.
-        nodeMeshes.forEach(function(mesh) {
-          mesh.material.color.set(0x00ffff);
-        });
-        // Highlight the selected node.
-        selected.material.color.set(0xffff00);
-        console.log("Selected:", selected.userData.name);
-      }
-    }
-    window.addEventListener('click', onClick, false);
-
-    /************** Animation and Render Loop **************/
-    function animate() {
-      renderer.setAnimationLoop(render);
-    }
-    function render() {
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    /************** Handle Window Resize **************/
-    window.addEventListener('resize', function() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
-</body>
-</html>
+    var renderer = new THREE.WebGLRenderer({ antial
