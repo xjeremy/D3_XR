@@ -13,9 +13,9 @@
 <body>
   <!-- Include libraries from CDNs -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
-  <script src="https://unpkg.com/three@0.152.2/examples/js/vr/VRButton.js"></script>
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.152.2/examples/js/OrbitControls.js"></script>
+  <script src="https://unpkg.com/three@0.152.2/examples/js/VRButton.js"></script>
 
   <script>
     /************** Data Generation **************/
@@ -83,7 +83,6 @@
     /************** Create Graph Objects **************/
     // Materials and geometry for nodes and links.
     var nodeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-    var selectedNodeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
     var nodeGeometry = new THREE.SphereGeometry(5, 16, 16);
     var linkMaterial = new THREE.LineBasicMaterial({ color: 0x888888 });
 
