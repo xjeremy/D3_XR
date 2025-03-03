@@ -1,17 +1,12 @@
-import { generateSampleData } from './data.js';
-import { computeRadialLayout } from './layout.js';
-import { XRGraphRenderer } from './xrRenderer.js';
-import { SVGGraphRenderer } from './svgRenderer.js';
-import { initInteractions } from './interactions.js';
-
-const dataRoot = generateSampleData(100);
-computeRadialLayout(dataRoot, 500);
-
-const hasXR = 'xr' in navigator;
-let xrRenderer, svgRenderer;
-if (hasXR) {
-  xrRenderer = new XRGraphRenderer(dataRoot);
-  // Possibly also show SVG for non-VR initial view or not
-}
-svgRenderer = new SVGGraphRenderer(dataRoot);
-initInteractions({ xrRenderer, svgRenderer });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebXR Radial Hierarchical Graph</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- The application will dynamically add the Three.js canvas, VRButton, and SVG elements -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
