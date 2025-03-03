@@ -7,9 +7,3 @@ body {
   color: #fff;
   font-family: sans-serif;
 }
-
-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
